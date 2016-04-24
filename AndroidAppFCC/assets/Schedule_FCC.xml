@@ -1,6 +1,6 @@
 <config>
   <global>
-    <schedule-version value="1.0"/>
+    <schedule-version value="1.4"/>
     <submit-dcs host="dcs.samknows.com"/>
     <tests-alarm-type type="WAKEUP"/>
     <location-service type="gps"/>
@@ -16,6 +16,10 @@
       <host dnsName="samknows1.wdc4.level3.net" displayName="Washington D.C., USA" />
       <host dnsName="samknows1.chi2.level3.net" displayName="Chicago, USA" />
       <host dnsName="samknows1.lax1.level3.net" displayName="Los Angeles, USA" />
+      <host dnsName="ec2-52-207-229-254.compute-1.amazonaws.com" displayName="aws-us-east-1"/>
+      <host dnsName="ec2-52-10-122-203.us-west-2.compute.amazonaws.com" displayName="aws-us-west-2"/>
+      <host dnsName="146.148.34.121" displayName="gce-us-central-1"/>
+      <host dnsName="40.114.1.73" displayName="azure-us-east"/>
     </hosts>
     <!-- data cap in megabytes -->
     <data-cap-default value="100"/>
@@ -46,13 +50,17 @@
   <tests>
     <test type="closestTarget" test-id="1" condition-group-id="2" displayName="Closest Target">
       <params>
-        <param name="target" value="samknows1.dal1.level3.net" />
+        <!--<param name="target" value="samknows1.dal1.level3.net" />
         <param name="target" value="samknows2.nyc2.level3.net" />
         <param name="target" value="samknows1.nyc2.level3.net" />
         <param name="target" value="samknows1.sjo1.level3.net" />
         <param name="target" value="samknows1.wdc4.level3.net" />
         <param name="target" value="samknows1.chi2.level3.net" />
-        <param name="target" value="samknows1.lax1.level3.net" />
+        <param name="target" value="samknows1.lax1.level3.net" /> -->
+        <param name="target" value="ec2-52-207-229-254.compute-1.amazonaws.com"/>
+        <param name="target" value="ec2-52-10-122-203.us-west-2.compute.amazonaws.com"/>
+        <param name="target" value="146.148.34.121"/>
+        <param name="target" value="40.114.1.73"/>
       </params>
       <ouput>
         <field name="closest" position="3"/>
@@ -96,25 +104,177 @@
         <param name="maxTime" value="30000000"/>
       </params>
     </test>
+    <test type="downstreamthroughput" test-id="10" condition-group-id="1" displayName="AWS-US-EAST-1 Download">
+      <params>
+        <param name="target" value="ec2-52-207-229-254.compute-1.amazonaws.com"/>
+        <param name="port" value="8080"/>
+        <param name="file" value="100MB.bin"/>
+        <param name="warmupmaxtime" value="5000000"/>
+        <param name="warmupmaxbytes" value="2621440"/>
+        <param name="transfermaxtime" value="15000000"/>
+        <param name="transfermaxbytes" value="20971520" />
+        <param name="buffersize" value="1048576"/>
+        <param name="numberofthreads" value="3"/>
+      </params>
+    </test>
+    <test type="upstreamthroughput"  test-id="11" condition-group-id="1" displayName="AWS-US-EAST-1 Upload">
+      <params>
+        <param name="target" value="ec2-52-207-229-254.compute-1.amazonaws.com"/>
+        <param name="port" value="8080"/>
+        <param name="file" value="100MB.bin"/>
+        <param name="warmupmaxtime" value="5000000"/>
+        <param name="warmupmaxbytes" value="2621440"/>
+        <param name="transfermaxtime" value="15000000"/>
+        <param name="transfermaxbytes" value="20971520" />
+        <param name="sendDataChunk" value="512"/>
+        <param name="postdatalength" value="10485760"/>
+        <param name="numberofthreads" value="3"/>
+      </params>
+    </test>
+    <test type="latency"  test-id="12" condition-group-id="1" displayName="AWS-US-EAST-1 Latency / Loss">
+      <params>
+        <param name="target" value="ec2-52-207-229-254.compute-1.amazonaws.com"/>
+        <param name="port" value="6000"/>
+        <param name="interPacketTime" value="500000"/>
+        <param name="delayTimeout" value="2000000"/>
+        <param name="numberOfPackets" value="60"/>
+        <param name="percentile" value="100"/>
+        <param name="maxTime" value="30000000"/>
+      </params>
+    </test>
+    <test type="downstreamthroughput" test-id="20" condition-group-id="1" displayName="AWS-US-WEST-2 Download">
+      <params>
+        <param name="target" value="ec2-52-10-122-203.us-west-2.compute.amazonaws.com"/>
+        <param name="port" value="8080"/>
+        <param name="file" value="100MB.bin"/>
+        <param name="warmupmaxtime" value="5000000"/>
+        <param name="warmupmaxbytes" value="2621440"/>
+        <param name="transfermaxtime" value="15000000"/>
+        <param name="transfermaxbytes" value="20971520" />
+        <param name="buffersize" value="1048576"/>
+        <param name="numberofthreads" value="3"/>
+      </params>
+    </test>
+    <test type="upstreamthroughput"  test-id="21" condition-group-id="1" displayName="AWS-US-WEST-2 Upload">
+      <params>
+        <param name="target" value="ec2-52-10-122-203.us-west-2.compute.amazonaws.com"/>
+        <param name="port" value="8080"/>
+        <param name="file" value="100MB.bin"/>
+        <param name="warmupmaxtime" value="5000000"/>
+        <param name="warmupmaxbytes" value="2621440"/>
+        <param name="transfermaxtime" value="15000000"/>
+        <param name="transfermaxbytes" value="20971520" />
+        <param name="sendDataChunk" value="512"/>
+        <param name="postdatalength" value="10485760"/>
+        <param name="numberofthreads" value="3"/>
+      </params>
+    </test>
+    <test type="latency"  test-id="22" condition-group-id="1" displayName="AWS-US-WEST-2 Latency / Loss">
+      <params>
+        <param name="target" value="ec2-52-10-122-203.us-west-2.compute.amazonaws.com"/>
+        <param name="port" value="6000"/>
+        <param name="interPacketTime" value="500000"/>
+        <param name="delayTimeout" value="2000000"/>
+        <param name="numberOfPackets" value="60"/>
+        <param name="percentile" value="100"/>
+        <param name="maxTime" value="30000000"/>
+      </params>
+    </test>
+    <test type="downstreamthroughput" test-id="30" condition-group-id="1" displayName="GCE-US-CENTRAL-1 Download">
+      <params>
+        <param name="target" value="146.148.34.121"/>
+        <param name="port" value="8080"/>
+        <param name="file" value="100MB.bin"/>
+        <param name="warmupmaxtime" value="5000000"/>
+        <param name="warmupmaxbytes" value="2621440"/>
+        <param name="transfermaxtime" value="15000000"/>
+        <param name="transfermaxbytes" value="20971520" />
+        <param name="buffersize" value="1048576"/>
+        <param name="numberofthreads" value="3"/>
+      </params>
+    </test>
+    <test type="upstreamthroughput"  test-id="31" condition-group-id="1" displayName="GCE-US-CENTRAL-1 Upload">
+      <params>
+        <param name="target" value="146.148.34.121"/>
+        <param name="port" value="8080"/>
+        <param name="file" value="100MB.bin"/>
+        <param name="warmupmaxtime" value="5000000"/>
+        <param name="warmupmaxbytes" value="2621440"/>
+        <param name="transfermaxtime" value="15000000"/>
+        <param name="transfermaxbytes" value="20971520" />
+        <param name="sendDataChunk" value="512"/>
+        <param name="postdatalength" value="10485760"/>
+        <param name="numberofthreads" value="3"/>
+      </params>
+    </test>
+    <test type="latency"  test-id="32" condition-group-id="1" displayName="GCE-US-CENTRAL-1 Latency / Loss">
+      <params>
+        <param name="target" value="146.148.34.121"/>
+        <param name="port" value="6000"/>
+        <param name="interPacketTime" value="500000"/>
+        <param name="delayTimeout" value="2000000"/>
+        <param name="numberOfPackets" value="60"/>
+        <param name="percentile" value="100"/>
+        <param name="maxTime" value="30000000"/>
+      </params>
+    </test>
+    <test type="downstreamthroughput" test-id="40" condition-group-id="1" displayName="AZURE-US-EAST Download">
+      <params>
+        <param name="target" value="40.114.1.73"/>
+        <param name="port" value="8080"/>
+        <param name="file" value="100MB.bin"/>
+        <param name="warmupmaxtime" value="5000000"/>
+        <param name="warmupmaxbytes" value="2621440"/>
+        <param name="transfermaxtime" value="15000000"/>
+        <param name="transfermaxbytes" value="20971520" />
+        <param name="buffersize" value="1048576"/>
+        <param name="numberofthreads" value="3"/>
+      </params>
+    </test>
+    <test type="upstreamthroughput"  test-id="41" condition-group-id="1" displayName="AZURE-US-EAST Upload">
+      <params>
+        <param name="target" value="40.114.1.73"/>
+        <param name="port" value="8080"/>
+        <param name="file" value="100MB.bin"/>
+        <param name="warmupmaxtime" value="5000000"/>
+        <param name="warmupmaxbytes" value="2621440"/>
+        <param name="transfermaxtime" value="15000000"/>
+        <param name="transfermaxbytes" value="20971520" />
+        <param name="sendDataChunk" value="512"/>
+        <param name="postdatalength" value="10485760"/>
+        <param name="numberofthreads" value="3"/>
+      </params>
+    </test>
+    <test type="latency"  test-id="42" condition-group-id="1" displayName="AZURE-US-EAST Latency / Loss">
+      <params>
+        <param name="target" value="40.114.1.73"/>
+        <param name="port" value="6000"/>
+        <param name="interPacketTime" value="500000"/>
+        <param name="delayTimeout" value="2000000"/>
+        <param name="numberOfPackets" value="60"/>
+        <param name="percentile" value="100"/>
+        <param name="maxTime" value="30000000"/>
+      </params>
+    </test>
   </tests>
+    <continuous-tests>
+        <tests>
+          <test id="10"/>
+          <test id="11"/>
+          <test id="12"/>
+          <test id="20"/>
+          <test id="21"/>
+          <test id="22"/>
+          <test id="40"/>
+          <test id="41"/>
+          <test id="42"/>
+        </tests>
+    </continuous-tests>
   <scheduled-tests>
-    <batch condition-group-id="1">
-      <executeAt>
-        <time random-interval="2h">07:00</time>
-        <time random-interval="8h">09:00</time>
-        <time random-interval="3h">17:00</time>
-      </executeAt>
-      <tests>
-        <test id="1"/>
-        <test id="2"/>
-        <test id="3"/>
-        <test id="4"/>
-      </tests>
-    </batch>
   </scheduled-tests>
   <manual-tests>
-    <test id="2" />
-    <test id="3" />
-    <test id="4" />
+    <test id="10"/>
+    <test id="11"/>
+    <test id="12"/>
   </manual-tests>
 </config>

@@ -1,8 +1,11 @@
 package com.samknows.fcc;
 
+import android.graphics.Typeface;
+
 import java.io.IOException;
 
 import com.samknows.libcore.SKLogger;
+import com.samknows.libcore.SKTypeface;
 import com.samknows.measurement.SKApplication;
 import com.samknows.ska.activity.SKAMainResultsActivity;
 
